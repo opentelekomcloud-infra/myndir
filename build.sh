@@ -5,7 +5,7 @@ source ${project_root}/secrets.sh
 
 cd ./infrastructure/ || exit 1
 scn_dir=$( pwd )
-
+terraform init
 terraform apply -auto-approve || exit 2
 
 # Searching for variables starting from "out-..." in current state
