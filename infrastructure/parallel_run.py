@@ -13,7 +13,7 @@ def main():
     targets = sys.argv[1:]
 
     def _run(_target):
-        subprocess.run(f"bash ./build_image.sh {_target}", shell=True, timeout=TIMEOUT)
+        subprocess.run(f"bash ./build_image.sh {_target}", shell=True, timeout=TIMEOUT, check=False)
 
     with ThreadPoolExecutor() as executor:
         for target in targets:
