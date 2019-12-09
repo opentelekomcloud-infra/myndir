@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 project_root=$( pwd )
+source ${project_root}/secrets.sh
 
 cd ./infrastructure/ || exit 1
 scn_dir=$( pwd )
 
-terraform apply || exit 2
+terraform apply -auto-approve || exit 2
 
 # Searching for variables starting from "out-..." in current state
 output="$(terraform show | grep "out-")"
@@ -25,7 +26,17 @@ cd "${project_root}/images" || exit 1
 
 targets=$(find -name "packer_image.json" -printf '%h ' | sort -u)
 echo ${targets}
-python3 "${scn_dir}/parallel_run.py" ${targets}
+if [[ -z $1 ]]; then
+    echo "Image is not specified, all images will be built in parallel"
+    python3 "${scn_dir}/parallel_run.py" ${targets}
+elif [[ $1 == "--single" ]]; then
+    echo "Image is not specified, all images will be built in consequently"
+    for target in ${targets}; do
+        bash ./build_image.sh ${target}
+    done
+else
+    bash ./build_image.sh $1
+fi
 
 cd ${scn_dir}
 terraform destroy -auto-approve

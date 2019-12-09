@@ -34,8 +34,8 @@
     {
       "type": "ansible",
       "host_alias": "test_host",
-      "galaxy_file": "requirements.yml",
-      "playbook_file": "test_host_setup.yml"
+      "galaxy_file": "../requirements.yml",
+      "playbook_file": "../playbooks/test_host_setup.yml"
     }
   ]
 }
