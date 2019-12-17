@@ -6,12 +6,8 @@
   vars_files:
     - "./vars/telegraf_dbconnection_vars.yml"
   vars:
-    telegraf_hostname: ""
+    telegraf_hostname: "scn4"
     telegraf_plugins_base:
-      - name: mem
-      - name: diskio
-        options:
-          devices: ["vdb", "vdc", "vdd"]
       - name: cpu
         options:
           percpu: "false"
