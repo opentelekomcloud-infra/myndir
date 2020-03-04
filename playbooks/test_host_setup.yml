@@ -8,7 +8,7 @@
     - role: darkwizard242.terraform
       become: yes
       vars:
-        terraform_version: "0.12.12"
+        terraform_version: "0.12.20"
   tasks:
     - name: Update and upgrade apt packages
       become: yes
