@@ -1,0 +1,54 @@
+---
+- name: Build infrastructure
+  hosts: test_host
+  roles:
+    - darkwizard242.terraform
+    - build_infrastructure
+  vars:
+    terraform_base_dir: "../infrastructure"
+    key_name: "images"
+    infra_state: present
+
+- name : Create images
+  hosts: test_host
+  vars:
+    packer_version: "1.0.0"
+    packer_arch: "amd64"
+    packer_bin_path: /usr/local/bin
+  tasks:
+    - name: Add variables from statefile
+      set_fact:
+        image_id: "{{ tf_output.outputs['out-image_id'].value }}"
+        group:  "{{ tf_output.outputs['out-group'].value }}"
+        network_id:  "{{ tf_output.outputs['out-network_id'].value }}"
+        ansible_ssh_private_key_file: "/tmp/{{ key_name }}"
+
+    - name: Ensure unzip is installed.
+      package: name=unzip state=present
+
+    - name: install packer
+      unarchive:
+        src: https://releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_{{ packer_arch }}.zip
+        dest: "{{ packer_bin_path }}"
+        remote_src: true
+        creates: "{{ packer_bin_path }}/packer"
+
+    - name: Find /var/log files equal or greater than 10 megabytes ending with .old or .log.gz
+      find:
+        paths: ../images/
+        patterns: packer_image.json
+      register: target
+
+    - name: Build images
+      command: "./build_image.sh ${target}"
+      with_items: target
+
+- name: Destroy infrastructure
+  hosts: test_host
+  roles:
+    - darkwizard242.terraform
+    - build_infrastructure
+  vars:
+    terraform_base_dir: "../infrastructure"
+    key_name: "images"
+    infra_state: absent
