@@ -33,7 +33,7 @@
         remote_src: true
         creates: "{{ packer_bin_path }}/packer"
 
-    - name: Find /var/log files equal or greater than 10 megabytes ending with .old or .log.gz
+    - name: Find packer build files
       find:
         paths: ../images/
         patterns: packer_image.json
