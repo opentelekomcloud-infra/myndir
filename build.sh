@@ -3,7 +3,7 @@
 project_root=$( pwd )
 source ${project_root}/secrets.sh
 
-cd ./infrastructure/ || exit 1
+cd ./infrastructure/packer/ || exit 1
 scn_dir=$( pwd )
 terraform init
 terraform apply -auto-approve || exit 2

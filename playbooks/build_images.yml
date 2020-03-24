@@ -1,0 +1,102 @@
+---
+- name : Register test_host
+  hosts: localhost
+  tasks:
+  - name: Register test_host
+    add_host:
+      name: "test_host"
+      ansible_host: "{{ test_host_ip }}"
+      ansible_ssh_user: "linux"
+      ansible_ssh_private_key_file: "/tmp/test_host_rsa"
+
+- name: Prepare clouds.yaml
+  hosts: test_host
+  become: yes
+  tasks:
+  - name: Register clouds location
+    set_fact:
+      clouds_yaml_file: "{{ lookup('env', 'OS_CLIENT_CONFIG_FILE') }}"
+  - name: Create tmp dir
+    file:
+      path: "{{ clouds_yaml_file | dirname }}"
+      state: directory
+
+  - name: Copy clouds.yaml
+    copy:
+      src: "{{ clouds_yaml_file }}"
+      dest: "{{ clouds_yaml_file }}"
+
+- name: Build infrastructure
+  hosts: test_host
+  become: yes
+  roles:
+    - darkwizard242.terraform
+    - build_infrastructure
+  vars:
+    terraform_base_dir: "../infrastructure"
+    scenario_name: "packer"
+    key_name: "{{ machine_key_name }}"
+    requirements: "requirements.txt"
+    infra_state: present
+  environment:
+    OS_CLIENT_CONFIG_FILE: "{{ clouds_yaml_file }}"
+    OS_CLOUD: "devstack"
+    AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+
+- name : Install Packer
+  hosts: test_host
+  become: yes
+  tasks:
+    - name: Ensure unzip is installed.
+      package: name=unzip state=present
+
+    - name: install packer
+      unarchive:
+        src: https://releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_{{ packer_arch }}.zip
+        dest: "{{ packer_bin_path }}"
+        remote_src: true
+
+    - name: Checkout myndir from git
+      git:
+        repo: "{{ myndir_repo }}"
+        dest: "{{ myndir_home }}"
+        version: "{{ myndir_version }}"
+        force: yes
+        depth: 1
+
+- name : Create images
+  hosts: test_host
+  environment:
+    OS_CLIENT_CONFIG_FILE: "{{ clouds_yaml_file }}"
+    OS_CLOUD: "devstack"
+    OTC_IMAGE_ID: "{{ tf_output.outputs['out-image_id'].value }}"
+    OTC_NETWORK_ID: "{{ tf_output.outputs['out-network_id'].value }}"
+    OTC_SEC_GROUP: "{{ tf_output.outputs['out-group'].value }}"
+  tasks:
+    - name: Build images
+      command: packer build {{ item }}
+      args:
+        chdir: "{{ myndir_home }}/images/"
+      with_items:
+       - "{{ myndir_home }}/images/scenario4/packer_image.json"
+       - "{{ myndir_home }}/images/test_host/packer_image.json"
+      ignore_errors: yes
+
+- name: Destroy infrastructure
+  hosts: test_host
+  become: yes
+  roles:
+    - darkwizard242.terraform
+    - build_infrastructure
+  vars:
+    terraform_base_dir: "../infrastructure"
+    scenario_name: "packer"
+    key_name: "{{ machine_key_name }}"
+    infra_state: absent
+    requirements: "requirements.txt"
+  environment:
+    OS_CLIENT_CONFIG_FILE: "{{ clouds_yaml_file }}"
+    OS_CLOUD: "devstack"
+    AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
