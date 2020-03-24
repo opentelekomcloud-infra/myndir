@@ -54,10 +54,10 @@
   hosts: test_host
   environment:
     OS_AUTH_URL: "{{ auth_url }}"
-    OS_USERNAME: "{{ clouds.devstack.auth.username }}"
-    OS_PASSWORD: "{{ clouds.devstack.auth.password }}"
-    OS_TENANT_NAME: "{{ clouds.devstack.auth.project_name }}"
-    OS_DOMAIN_NAME: "{{ clouds.devstack.auth.domain_name }}"
+    OS_USERNAME: "{{ lookup('env', 'TF_VAR_username') }}"
+    OS_PASSWORD: "{{ lookup('env', 'TF_VAR_password') }}"
+    OS_TENANT_NAME: "{{ lookup('env', 'TF_VAR_tenant_name') }}"
+    OS_DOMAIN_NAME: "{{ lookup('env', 'TF_VAR_domain_name') }}"
     OTC_IMAGE_ID: "{{ tf_output.outputs['out-image_id'].value }}"
     OTC_NETWORK_ID: "{{ tf_output.outputs['out-network_id'].value }}"
     OTC_SEC_GROUP: "{{ tf_output.outputs['out-group'].value }}"
