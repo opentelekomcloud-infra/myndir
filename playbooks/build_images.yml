@@ -2,8 +2,8 @@
 - name : Register test_host
   hosts: localhost
   tasks:
-    - name: Print env
-      command: env
+  - name: Print env
+    command: env
 
   - name: Register test_host
     add_host:
