@@ -73,6 +73,7 @@
     OTC_IMAGE_ID: "{{ tf_output.outputs['out-image_id'].value }}"
     OTC_NETWORK_ID: "{{ tf_output.outputs['out-network_id'].value }}"
     OTC_SEC_GROUP: "{{ tf_output.outputs['out-group'].value }}"
+    INFLUX_PASSWORD: "{{ influxdb_user_password }}"
   tasks:
     - name: Build images
       command: packer build {{ item }}
