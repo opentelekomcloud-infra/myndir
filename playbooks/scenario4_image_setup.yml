@@ -6,6 +6,7 @@
   vars_files:
     - "./vars/telegraf_dbconnection_vars.yml"
   vars:
+    telegraf_influxdb_retention_policy: ""
     telegraf_hostname: "scn4"
     telegraf_plugins_base:
       - name: cpu
