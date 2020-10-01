@@ -4,6 +4,8 @@
     requirements:
       - "requirements"
     req_dir: "/tmp/requirements/"
+  environment:
+    ANSIBLE_SKIP_CONFLICT_CHECK: 1
   roles:
     - role: darkwizard242.terraform
       become: yes
@@ -34,11 +36,6 @@
         src: "{{ item }}.txt"
         dest: "{{ req_dir }}"
       with_items: "{{ requirements }}"
-    - name: Remove Ansible
-      pip:
-        executable: pip3
-        name: ansible
-        state: absent
     - name: Install Ansible
       pip:
         executable: pip3
