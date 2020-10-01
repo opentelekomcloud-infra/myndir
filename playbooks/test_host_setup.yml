@@ -34,6 +34,11 @@
         src: "{{ item }}.txt"
         dest: "{{ req_dir }}"
       with_items: "{{ requirements }}"
+    - name: Upgrade Ansible
+      pip:
+        executable: pip3
+        name: ansible
+        extra_args: --upgrade
     - name: Install requirements
       pip:
         executable: pip3
