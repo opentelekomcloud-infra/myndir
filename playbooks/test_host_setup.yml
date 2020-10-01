@@ -4,12 +4,19 @@
     requirements:
       - "requirements"
     req_dir: "/tmp/requirements/"
+  environment:
+    ANSIBLE_SKIP_CONFLICT_CHECK: 1
   roles:
     - role: darkwizard242.terraform
       become: yes
       vars:
         terraform_version: "0.12.20"
   tasks:
+    - name: Remove failing source
+      become: yes
+      file:
+        state: absent
+        path: "/etc/apt/sources.list.d/cloud-otc.list"
     - name: Update and upgrade apt packages
       become: yes
       apt:
@@ -29,6 +36,11 @@
         src: "{{ item }}.txt"
         dest: "{{ req_dir }}"
       with_items: "{{ requirements }}"
+    - name: Install Ansible
+      pip:
+        executable: pip3
+        name: ansible
+        extra_args: --upgrade
     - name: Install requirements
       pip:
         executable: pip3
