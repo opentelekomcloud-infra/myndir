@@ -34,7 +34,12 @@
         src: "{{ item }}.txt"
         dest: "{{ req_dir }}"
       with_items: "{{ requirements }}"
-    - name: Upgrade Ansible
+    - name: Remove Ansible
+      pip:
+        executable: pip3
+        name: ansible
+        state: absent
+    - name: Install Ansible
       pip:
         executable: pip3
         name: ansible
