@@ -30,7 +30,7 @@
   hosts: test_host
   become: yes
   roles:
-    - darkwizard242.terraform
+    - anton_sidelnikov.terraform
     - build_infrastructure
   vars:
     terraform_base_dir: "../infrastructure"
@@ -88,7 +88,7 @@
   hosts: test_host
   become: yes
   roles:
-    - darkwizard242.terraform
+    - anton_sidelnikov.terraform
     - build_infrastructure
   vars:
     terraform_base_dir: "../infrastructure"
