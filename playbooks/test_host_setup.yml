@@ -7,10 +7,10 @@
   environment:
     ANSIBLE_SKIP_CONFLICT_CHECK: 1
   roles:
-    - role: darkwizard242.terraform
+    - role: anton_sidelnikov.terraform
       become: yes
       vars:
-        terraform_version: "0.12.20"
+        terraform_version: "0.14.0"
   tasks:
     - name: Remove failing source
       become: yes
