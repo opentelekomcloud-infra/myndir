@@ -11,7 +11,7 @@
     {
       "type": "openstack",
       "ssh_username": "{{user `ssh_user` }}",
-      "image_name": "Debian_CSM_test_host",
+      "image_name": "Debian_csm_test_host",
       "source_image": "{{user `source_image` }}",
       "flavor": "{{user `flavor` }}",
       "region": "{{user `region` }}",
