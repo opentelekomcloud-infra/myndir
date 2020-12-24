@@ -1,7 +1,7 @@
 {
   "variables": {
     "source_image": "{{env `OTC_IMAGE_ID`}}",
-    "source_image_name": "KPI_Scn4_host_image",
+    "source_image_name": "Debian_csm_as_host_image",
     "flavor": "s2.large.2",
     "region": "eu-de",
     "ssh_user": "linux",
@@ -30,8 +30,8 @@
   "provisioners": [
     {
       "type": "ansible",
-      "host_alias": "scn4_host",
-      "playbook_file": "../playbooks/scenario4_image_setup.yml"
+      "host_alias": "as_host",
+      "playbook_file": "../playbooks/as_image_setup.yml"
     }
   ]
 }

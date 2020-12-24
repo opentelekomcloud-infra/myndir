@@ -1,9 +1,9 @@
-terraform_version: 0.12.20
+terraform_version: 0.14.0
 machine_key_name: "images"
 myndir_repo: "https://github.com/opentelekomcloud-infra/myndir.git"
 myndir_home: "/home/linux/myndir"
 myndir_version: HEAD
-packer_version: "1.4.4"
+packer_version: "1.6.5"
 packer_arch: "amd64"
 packer_bin_path: /usr/local/bin
 ansible_ssh_private_key_file: "/tmp/{{ machine_key_name }}"

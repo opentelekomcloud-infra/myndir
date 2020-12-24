@@ -1,5 +1,5 @@
 - name: Setup software
-  hosts: scn4_host
+  hosts: as_host
   roles:
     - telegraf-client
   become: yes
@@ -7,7 +7,7 @@
     - "./vars/telegraf_dbconnection_vars.yml"
   vars:
     telegraf_influxdb_retention_policy: ""
-    telegraf_hostname: "scn4"
+    telegraf_hostname: "as"
     telegraf_plugins_base:
       - name: cpu
         options:
@@ -17,7 +17,7 @@
             - "time_*"
 
 - name: Start test Server
-  hosts: scn4_host
+  hosts: as_host
   become: yes
   roles:
     - too_simple_server
