@@ -33,8 +33,8 @@
     - anton_sidelnikov.terraform
     - build_infrastructure
   vars:
-    terraform_base_dir: "../infrastructure"
-    scenario_name: "packer"
+    terraform_base_dir: infrastructure
+    scenario_name: packer
     key_name: "{{ machine_key_name }}"
     requirements: "requirements.txt"
     infra_state: present
@@ -91,8 +91,8 @@
     - anton_sidelnikov.terraform
     - build_infrastructure
   vars:
-    terraform_base_dir: "../infrastructure"
-    scenario_name: "packer"
+    terraform_base_dir: infrastructure
+    scenario_name: packer
     key_name: "{{ machine_key_name }}"
     infra_state: absent
     requirements: "requirements.txt"
